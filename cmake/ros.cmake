@@ -99,54 +99,54 @@ function(CreateCatkinWorkspace)
     COMMAND "${CMAKE_COMMAND}" -E touch "${STAMP_FILE}"
     COMMENT "Initializing catkin workspace in ${DIR}"
   )
-  add_custom_target(catkin-init-${ID} DEPENDS "${STAMP_FILE}")
-  get_property(PREVIOUS_WORKSPACE GLOBAL PROPERTY PREVIOUS_CATKIN_WORKSPACE)
-  if(NOT "${PREVIOUS_WORKSPACE}" STREQUAL "")
-    add_dependencies(catkin-init-${ID} catkin-init-${PREVIOUS_WORKSPACE})
-  endif()
-  set_property(GLOBAL PROPERTY PREVIOUS_CATKIN_WORKSPACE "${ID}")
-  set_property(GLOBAL APPEND PROPERTY CATKIN_WORKSPACES "${ID}")
-  set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID})
-  set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_DIR "${DIR}")
-  set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_IS_LEAF TRUE)
-  if(use_catkin_make)
-    set(BUILD_COMMAND ${COMMAND_PREFIX} catkin_make -C "${DIR}" -DCMAKE_BUILD_TYPE=$<CONFIG> ${CC_WORKSPACE_ARGS_CATKIN_BUILD_ARGS})
-    set(BUILD_COMMAND_DEPENDS)
-  else()
-    set(BUILD_COMMAND ${COMMAND_PREFIX} "${CMAKE_COMMAND}" -E chdir "${DIR}" catkin build -DCMAKE_BUILD_TYPE=$<CONFIG> ${CC_WORKSPACE_ARGS_CATKIN_BUILD_ARGS})
+  # add_custom_target(catkin-init-${ID} DEPENDS "${STAMP_FILE}")
+  # get_property(PREVIOUS_WORKSPACE GLOBAL PROPERTY PREVIOUS_CATKIN_WORKSPACE)
+  # if(NOT "${PREVIOUS_WORKSPACE}" STREQUAL "")
+  #   add_dependencies(catkin-init-${ID} catkin-init-${PREVIOUS_WORKSPACE})
+  # endif()
+  # set_property(GLOBAL PROPERTY PREVIOUS_CATKIN_WORKSPACE "${ID}")
+  # set_property(GLOBAL APPEND PROPERTY CATKIN_WORKSPACES "${ID}")
+  # set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID})
+  # set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_DIR "${DIR}")
+  # set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_IS_LEAF TRUE)
+  # if(use_catkin_make)
+  #   set(BUILD_COMMAND ${COMMAND_PREFIX} catkin_make -C "${DIR}" -DCMAKE_BUILD_TYPE=$<CONFIG> ${CC_WORKSPACE_ARGS_CATKIN_BUILD_ARGS})
+  #   set(BUILD_COMMAND_DEPENDS)
+  # else()
+  #   set(BUILD_COMMAND ${COMMAND_PREFIX} "${CMAKE_COMMAND}" -E chdir "${DIR}" catkin build -DCMAKE_BUILD_TYPE=$<CONFIG> ${CC_WORKSPACE_ARGS_CATKIN_BUILD_ARGS})
 
-    set(SKIPLIST_FILE "${STAMP_DIR}/${ID}-skiplist.txt")
-    set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_SKIPLIST_FILE "${SKIPLIST_FILE}")
-    file(REMOVE "${SKIPLIST_FILE}")
-    file(TOUCH "${SKIPLIST_FILE}")
-    set(SKIPLIST_FILE_CACHE "${STAMP_DIR}/${ID}-skiplist-cache.txt")
-    set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_SKIPLIST_FILE_CACHE "${SKIPLIST_FILE_CACHE}")
-    file(GENERATE
-      OUTPUT "${SKIPLIST_FILE_CACHE}"
-      INPUT "${SKIPLIST_FILE}"
-    )
+  #   set(SKIPLIST_FILE "${STAMP_DIR}/${ID}-skiplist.txt")
+  #   set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_SKIPLIST_FILE "${SKIPLIST_FILE}")
+  #   file(REMOVE "${SKIPLIST_FILE}")
+  #   file(TOUCH "${SKIPLIST_FILE}")
+  #   set(SKIPLIST_FILE_CACHE "${STAMP_DIR}/${ID}-skiplist-cache.txt")
+  #   set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_SKIPLIST_FILE_CACHE "${SKIPLIST_FILE_CACHE}")
+  #   file(GENERATE
+  #     OUTPUT "${SKIPLIST_FILE_CACHE}"
+  #     INPUT "${SKIPLIST_FILE}"
+  #   )
 
-    set(SKIPLIST_STAMP_FILE "${STAMP_DIR}/${ID}-skiplist.stamp")
-    set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_SKIPLIST_STAMP "${SKIPLIST_STAMP_FILE}")
+  #   set(SKIPLIST_STAMP_FILE "${STAMP_DIR}/${ID}-skiplist.stamp")
+  #   set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_SKIPLIST_STAMP "${SKIPLIST_STAMP_FILE}")
 
-    add_custom_target(catkin-config-skiplist-${ID} DEPENDS "${SKIPLIST_STAMP_FILE}")
-    add_dependencies(catkin-config-skiplist-${ID} catkin-init-${ID})
-    set(BUILD_COMMAND_DEPENDS DEPENDS ${SKIPLIST_STAMP_FILE})
-  endif()
-  set(STAMP_FILE "${STAMP_DIR}/${ID}.stamp")
-  set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_STAMP "${STAMP_FILE}")
-  add_custom_command(
-    OUTPUT "${STAMP_FILE}"
-    COMMAND ${BUILD_COMMAND}
-    COMMAND "${CMAKE_COMMAND}" -E touch "${STAMP_FILE}"
-    COMMENT "Build catkin workspace ${ID} at ${DIR}"
-    ${BUILD_COMMAND_DEPENDS}
-  )
-  add_custom_target(catkin-build-${ID} DEPENDS "${STAMP_FILE}")
-  add_dependencies(catkin-build-${ID} catkin-init-${ID})
-  cmake_language(EVAL CODE "
-    cmake_language(DEFER CALL FinalizeCatkinWorkspace [[${ID}]])
-  ")
+  #   add_custom_target(catkin-config-skiplist-${ID} DEPENDS "${SKIPLIST_STAMP_FILE}")
+  #   add_dependencies(catkin-config-skiplist-${ID} catkin-init-${ID})
+  #   set(BUILD_COMMAND_DEPENDS DEPENDS ${SKIPLIST_STAMP_FILE})
+  # endif()
+  # set(STAMP_FILE "${STAMP_DIR}/${ID}.stamp")
+  # set_property(GLOBAL PROPERTY CATKIN_WORKSPACE_${ID}_STAMP "${STAMP_FILE}")
+  # add_custom_command(
+  #   OUTPUT "${STAMP_FILE}"
+  #   COMMAND ${BUILD_COMMAND}
+  #   COMMAND "${CMAKE_COMMAND}" -E touch "${STAMP_FILE}"
+  #   COMMENT "Build catkin workspace ${ID} at ${DIR}"
+  #   ${BUILD_COMMAND_DEPENDS}
+  # )
+  # add_custom_target(catkin-build-${ID} DEPENDS "${STAMP_FILE}")
+  # add_dependencies(catkin-build-${ID} catkin-init-${ID})
+  # cmake_language(EVAL CODE "
+  #   cmake_language(DEFER CALL FinalizeCatkinWorkspace [[${ID}]])
+  # ")
 endfunction()
 
 function(EnsureValidCatkinWorkspace ID)

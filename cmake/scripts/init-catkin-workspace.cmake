@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
+message(STATUS "Catkin dir: ${CATKIN_DIR}")
 file(MAKE_DIRECTORY "${CATKIN_DIR}/src")
 
 if("${WORKSPACE_TYPE}" STREQUAL "make")
@@ -20,47 +21,44 @@ else()
   endif()
 endif()
 
-get_filename_component(result "${CATKIN_DIR}/src" DIRECTORY)
-message(STATUS "catkin workspace: ${result}")
+# if(NOT EXISTS "${INIT_GENERATE}")
+#   execute_process(
+#     COMMAND ${INIT_COMMAND}
+#     WORKING_DIRECTORY "${INIT_WORKDIR}"
+#     COMMAND_ERROR_IS_FATAL ANY
+#   )
+# endif()
 
-if(NOT EXISTS "${INIT_GENERATE}")
-  execute_process(
-    COMMAND ${INIT_COMMAND}
-    WORKING_DIRECTORY "${INIT_WORKDIR}"
-    COMMAND_ERROR_IS_FATAL ANY
-  )
-endif()
+# if("${WORKSPACE_TYPE}" STREQUAL "make")
+#   set(INIT_COMMAND catkin_make -C "${CATKIN_DIR}")
+# else()
+#   set(INIT_COMMAND catkin build)
+# endif()
 
-if("${WORKSPACE_TYPE}" STREQUAL "make")
-  set(INIT_COMMAND catkin_make -C "${CATKIN_DIR}")
-else()
-  set(INIT_COMMAND catkin build)
-endif()
+# if(NOT EXISTS "${CATKIN_DIR}/devel/setup.sh")
+#   file(GLOB SRC_FILES "${CATKIN_DIR}/src/*")
+#   if("${WORKSPACE_TYPE}" STREQUAL "make")
+#     set(NFILES_IF_EMPTY 1)
+#   else()
+#     set(NFILES_IF_EMPTY 0)
+#   endif()
+#   list(LENGTH SRC_FILES NFILES)
+#   if(NFILES EQUAL ${NFILES_IF_EMPTY})
+#     execute_process(
+#       COMMAND ${INIT_COMMAND}
+#       WORKING_DIRECTORY "${CATKIN_DIR}"
+#       COMMAND_ERROR_IS_FATAL ANY
+#     )
+#   endif()
+# endif()
 
-if(NOT EXISTS "${CATKIN_DIR}/devel/setup.sh")
-  file(GLOB SRC_FILES "${CATKIN_DIR}/src/*")
-  if("${WORKSPACE_TYPE}" STREQUAL "make")
-    set(NFILES_IF_EMPTY 1)
-  else()
-    set(NFILES_IF_EMPTY 0)
-  endif()
-  list(LENGTH SRC_FILES NFILES)
-  if(NFILES EQUAL ${NFILES_IF_EMPTY})
-    execute_process(
-      COMMAND ${INIT_COMMAND}
-      WORKING_DIRECTORY "${CATKIN_DIR}"
-      COMMAND_ERROR_IS_FATAL ANY
-    )
-  endif()
-endif()
-
-if(NOT EXISTS "${CAKTIN_DIR}/.gitignore")
-  file(WRITE "${CATKIN_DIR}/.gitignore"
-".catkin_tools/*
-.catkin_workspace
-build/*
-devel/*
-install/*
-logs/*
-src/CMakeLists.txt")
-endif()
+# if(NOT EXISTS "${CAKTIN_DIR}/.gitignore")
+#   file(WRITE "${CATKIN_DIR}/.gitignore"
+# ".catkin_tools/*
+# .catkin_workspace
+# build/*
+# devel/*
+# install/*
+# logs/*
+# src/CMakeLists.txt")
+# endif()
