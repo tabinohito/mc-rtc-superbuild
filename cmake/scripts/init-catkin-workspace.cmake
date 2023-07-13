@@ -20,6 +20,9 @@ else()
   endif()
 endif()
 
+get_filename_component(result "${CATKIN_DIR}/src" DIRECTORY)
+message(STATUS "catkin workspace: ${result}")
+
 if(NOT EXISTS "${INIT_GENERATE}")
   execute_process(
     COMMAND ${INIT_COMMAND}
